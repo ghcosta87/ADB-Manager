@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[pt_BR]=
+Comment=
+Exec=./adb-manager
+GenericName[pt_BR]=Gerenciador de conexões ADB
+GenericName=Gerenciador de conexões ADB
+Icon=/home/gabriel/.programas/adb-manager/adb-manager.png
+MimeType=
+Name[pt_BR]=Android Debug Bridge Manager
+Name=Android Debug Bridge Manager
+Path=/home/gabriel/.programas/adb-manager/
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
