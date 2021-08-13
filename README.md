@@ -1,5 +1,9 @@
 # ADB-Manager
-Gerenciador de conexão de dispositivos via ADB (Android Debug Bridge)
+
+0# What's ADB ?
+
+    ADB is a command line tool to interact with android devices
+    https://developer.android.com/studio/command-line/adb?hl=pt-br
 
 #1 Main Goal
     
