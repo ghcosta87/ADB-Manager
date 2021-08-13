@@ -15,6 +15,7 @@ public:
     Q_INVOKABLE void console_fill();
     Q_INVOKABLE void conectar_dispositivo(QString);
     Q_INVOKABLE void desconectar_dispositivos();
+    Q_INVOKABLE QString grabPath();
 private:
     QProcess *m_process;
 };
