@@ -24,6 +24,7 @@ Gerenciador de conexão de dispositivos via ADB (Android Debug Bridge)
        > first version
       
 #5 Screenshots
+
       ![Alt text](https://i.imgur.com/0dxUz6M.png "Main Screen")
       ![Alt text](https://i.imgur.com/WpbjKop.png "Add Device Screen")
       ![Alt text](https://i.imgur.com/eUPqaiK.png "Device Attached")
