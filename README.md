@@ -22,7 +22,9 @@ Gerenciador de conexão de dispositivos via ADB (Android Debug Bridge)
 #4 Version 
        > 0.0.0.0
        > first version
-  
+       
+       
+  ![image](https://static01.bbi.io/2Wt9Tk.gif) 
   !(image)[https://imgur.com/0dxUz6M]
 ![Alt text](https://imgur.com/0dxUz6M "Main Screen")
 ![Alt text](https://imgur.com/WpbjKop "Add Device Screen")
