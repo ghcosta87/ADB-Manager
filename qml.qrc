@@ -3,5 +3,9 @@
         <file>main.qml</file>
         <file>adb_commands.js</file>
         <file>imagens/loading-buffering.gif</file>
+        <file>scripts/adb_wifi_config.sh</file>
+        <file>scripts/conectar.sh</file>
+        <file>scripts/data_import.sh</file>
+        <file>scripts/desconectar.sh</file>
     </qresource>
 </RCC>

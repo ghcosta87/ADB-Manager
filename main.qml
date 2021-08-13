@@ -64,7 +64,9 @@ Window {
     }
 
     Component.onCompleted: {
-        rodar_comando2.console_fill()
+        Calljava.grabPath()
+
+//        runScript.console_fill()
         Calljava.a01_funcao_inicial()
         Calljava.a03_setar_constantes()
         Calljava.a04_carregar_dispositivos()
@@ -72,7 +74,7 @@ Window {
 
         janela_cadastro.visible=false
 
-        temporizador.start()
+        temporizador.start()    
     }
 
     Component.onDestruction: {
@@ -81,10 +83,10 @@ Window {
 
     Timer{
         id:temporizador
-        interval:5000
+        interval:2000
         repeat: true
         onTriggered: {
-            rodar_comando2.console_fill()
+            runScript.console_fill()
             Calljava.ler_arquivos()
             loading_gif.visible=false
             intervalo.start()
@@ -93,7 +95,7 @@ Window {
     }
     Timer{
         id:intervalo
-        interval: 5000
+        interval: 2000
         onTriggered: {
             temporizador.start()
             loading_gif.visible=true
@@ -181,7 +183,7 @@ Window {
                 onPressed: parent.color=botao_pressionado
                 onReleased:{
                     parent.color=botao_solto
-                    rodar_comando4.desconectar_dispositivos()
+                    runScript.desconectar_dispositivos()
                 }
             }
         }
@@ -373,7 +375,7 @@ Window {
                 onPressed: parent.color=botao_pressionado
                 onReleased:{
                     parent.color=botao_solto
-                    rodar_comando1.run()
+                    runScript.run()
                 }
             }
         }
@@ -495,7 +497,7 @@ Window {
                 onPressed: parent.color=botao_pressionado
                 onReleased:{
                     parent.color=botao_solto
-                    rodar_comando2.console_fill()
+                    runScript.console_fill()
                     Calljava.a05_cadastrar_dispositivo()
                     janela_cadastro.visible=false
                     Calljava.a04_carregar_dispositivos()
@@ -531,7 +533,7 @@ Window {
                 onReleased:{
                     parent.color=botao_solto
                     janela_cadastro.visible=false
-                    rodar_comando2.console_fill()
+                    runScript.console_fill()
                     Calljava.ler_arquivos()
                 }
             }

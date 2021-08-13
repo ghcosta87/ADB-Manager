@@ -1,3 +1,4 @@
+var myPath
 
 function a01_funcao_inicial(){    
     var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
@@ -81,21 +82,23 @@ function a05_cadastrar_dispositivo(selecao){
     })
 }
 
-function a06_ler_arquivos(selecao){    
+function a06_ler_arquivos(selecao){
+//    console.log(myPath)
     var doc = new XMLHttpRequest();
     switch(selecao){
     case "ip":
-        doc.open("GET", "file:///home/gabriel/.programas/adb-manager/ip.txt",true)
+        doc.open("GET", "file://"+myPath+"/ip.txt",true)
+        //        doc.open("GET", "file:///home/gabriel/.programas/adb-manager/ip.txt",true)
         //doc.open("GET","https://br.investing.com/currencies/usd-brl")
         break
     case "endereco":
-        doc.open("GET", "file:///home/gabriel/.programas/adb-manager/endereco.txt",true)
+        doc.open("GET","file://"+myPath+"/endereco.txt",true)
         break
     case "modelo":
-        doc.open("GET", "file:///home/gabriel/.programas/adb-manager/modelo.txt",true)
+        doc.open("GET","file://"+myPath+"/modelo.txt",true)
         break
     case "conexao":
-        doc.open("GET", "file:///home/gabriel/.programas/adb-manager/conexao.txt",true)
+        doc.open("GET","file://"+myPath+"/conexao.txt",true)
         break
     }
     console_area.text = "";
@@ -125,7 +128,7 @@ function a06_ler_arquivos(selecao){
 }
 
 function showRequestInfo(input) {
-    //console.debug(input)
+//    console.debug(input)
     if(input!=="#text")console_area.text = console_area.text + "\n" + input
 }
 
@@ -151,5 +154,10 @@ function a07_conectar_dispositivos(indice){
         var comandosql = tx.executeSql('SELECT * FROM dispositivos')
         ip=comandosql.rows.item(0).ip
     })
-    rodar_comando3.conectar_dispositivo(ip)
+    runScript.conectar_dispositivo(ip)
+}
+
+function grabPath(){
+    myPath=runScript.grabPath()
+    console.debug("myPath from C script: "+myPath);
 }
