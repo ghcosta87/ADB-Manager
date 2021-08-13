@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>adb_commands.js</file>
+        <file>imagens/loading-buffering.gif</file>
+    </qresource>
+</RCC>
