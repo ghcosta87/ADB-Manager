@@ -19,16 +19,13 @@ int main(int argc, char *argv[])
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);  
+    }, Qt::QueuedConnection);
 
-    QString customPath;
-    customPath = "/home/gabriel/.programas/adb-manager/";
-    engine.setOfflineStoragePath(QString(customPath));
+    QString myPath;
+    myPath=QCoreApplication::applicationDirPath();
+    engine.setOfflineStoragePath(QString(myPath));
 
-    engine.rootContext()->setContextProperty("rodar_comando1",new run_command);
-    engine.rootContext()->setContextProperty("rodar_comando2",new run_command);    
-    engine.rootContext()->setContextProperty("rodar_comando3",new run_command);
-    engine.rootContext()->setContextProperty("rodar_comando4",new run_command);
+    engine.rootContext()->setContextProperty("runScript",new run_command);
 
     engine.load(url);
 
