@@ -1,11 +1,20 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>adb_commands.js</file>
+        <file>main_old.qml</file>
+        <file>adbCommands.js</file>
         <file>imagens/loading-buffering.gif</file>
         <file>scripts/adb_wifi_config.sh</file>
         <file>scripts/conectar.sh</file>
         <file>scripts/data_import.sh</file>
         <file>scripts/desconectar.sh</file>
+        <file>ScreenShots/AddDeviceScreen.png</file>
+        <file>ScreenShots/DeviceAttached.png</file>
+        <file>ScreenShots/MainScreen.png</file>
+        <file>sqlDatabase.js</file>
+        <file>mainLogic.js</file>
+        <file>main.qml</file>
+        <file>MainPage.qml</file>
+        <file>SettingsPage.qml</file>
+        <file>Debug.qml</file>
     </qresource>
 </RCC>

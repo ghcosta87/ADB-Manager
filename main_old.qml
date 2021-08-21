@@ -10,7 +10,7 @@ import QtQuick.Controls 1.4 as Calendar_item
 import Qt.labs.calendar 1.0
 import QtQuick.Extras 1.4
 
-import 'adb_commands.js' as Calljava
+import 'adbCommands.js' as adb
 
 Window {
     id:janela_principal
