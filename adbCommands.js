@@ -1,57 +1,19 @@
-var myPath
-
-function a01_funcao_inicial(){    
-    var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
-    db.transaction(function(tx){
-        tx.executeSql('CREATE TABLE IF NOT EXISTS dados_do_programa(indice numeric,nome text,valor text)')
-        var comandosql=tx.executeSql('SELECT * FROM dados_do_programa')
-        if(comandosql.rows.length===0){
-            tx.executeSql('INSERT INTO dados_do_programa VALUES(?,?,?)',[1,"window_width",600])
-            tx.executeSql('INSERT INTO dados_do_programa VALUES(?,?,?)',[2,"window_height",600])
-            tx.executeSql('INSERT INTO dados_do_programa VALUES(?,?,?)',[3,"window_x",0])
-            tx.executeSql('INSERT INTO dados_do_programa VALUES(?,?,?)',[4,"window_y",0])
-        }
-        tx.executeSql('CREATE TABLE IF NOT EXISTS dispositivos(indice numeric,nome text,ip text,image_path text,desc text)')
-    })
-}
-
-function a02_selecionar_constante(indice){
-    var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
-    var retorno
-    db.transaction(function(tx){
-        switch(indice){
-        case "window_width":
-            retorno=(tx.executeSql('SELECT valor FROM dados_do_programa WHERE nome=?',[indice])).rows.item(0).valor
-            break
-        case "window_height":
-            retorno=(tx.executeSql('SELECT valor FROM dados_do_programa WHERE nome=?',[indice])).rows.item(0).valor
-            break
-        case "window_x":
-            retorno=(tx.executeSql('SELECT valor FROM dados_do_programa WHERE nome=?',[indice])).rows.item(0).valor
-            break
-        case "window_y":
-            retorno=(tx.executeSql('SELECT valor FROM dados_do_programa WHERE nome=?',[indice])).rows.item(0).valor
-            break
-        }
-    })
-    return parseInt(retorno)
-}
 
 function a03_setar_constantes(){
     var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
     db.transaction(function(tx){
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[janela_principal.width,"window_width"]);
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[janela_principal.height,"window_height"]);
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[janela_principal.x,"window_x"]);
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[janela_principal.y,"window_y"]);
+        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.width,"window_width"]);
+        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.height,"window_height"]);
+        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.x,"window_x"]);
+        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.y,"window_y"]);
     })
 
-    janela_principal.title="Android Debug Bridge - Manager"
+//    janela_principal.title="Android Debug Bridge - Manager"
 }
 
 function a04_carregar_dispositivos(){
     var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
-    dispositivos.model.clear()
+    devicesGrid.model.clear()
     var i
     var indice; var nome; var ip; var image_path; var desc
     db.transaction(function(tx){
@@ -62,7 +24,7 @@ function a04_carregar_dispositivos(){
             ip=comandosql.rows.item(i).ip
             image_path=comandosql.rows.item(i).image_path
             desc=comandosql.rows.item(i).desc
-            dispositivos.model.append({
+            devicesGrid.model.append({
                                           grid_indice:indice,
                                           grid_nome:nome,
                                           grid_ip:ip,
@@ -83,7 +45,7 @@ function a05_cadastrar_dispositivo(selecao){
 }
 
 function a06_ler_arquivos(selecao){
-//    console.log(myPath)
+    var myPath=runScript.grabPath()
     var doc = new XMLHttpRequest();
     switch(selecao){
     case "ip":
@@ -128,7 +90,7 @@ function a06_ler_arquivos(selecao){
 }
 
 function showRequestInfo(input) {
-//    console.debug(input)
+    //    console.debug(input)
     if(input!=="#text")console_area.text = console_area.text + "\n" + input
 }
 
@@ -157,7 +119,4 @@ function a07_conectar_dispositivos(indice){
     runScript.conectar_dispositivo(ip)
 }
 
-function grabPath(){
-    myPath=runScript.grabPath()
-    console.debug("myPath from C script: "+myPath);
-}
+
