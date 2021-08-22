@@ -7,12 +7,12 @@ import QtQuick.Controls 2.1
 
 import QtQuick.Extras 1.4
 
-import 'adbCommands.js' as ADB
-import 'mainLogic.js' as JS
-import 'sqlDatabase.js' as SQL
+import "adbCommands.js" as ADB
+import "mainLogic.js" as JS
+import "sqlDatabase.js" as SQL
 
 Item {
-    id:mainItem
+    id: mainItem
     anchors.fill: parent
 
     Component.onCompleted: {
@@ -25,43 +25,48 @@ Item {
         //janela_cadastro.visible=false
         timer.start()
 
-        currentPage=0
+        currentPage = 0
+        if(!mainPageFirstTime){
+            mainPageFirstTime=true
+            posY=appWindow.height*0.6
+            click=!click
+        }
     }
 
-    Rectangle{
+    Rectangle {
         visible: false
-        Timer{
-            id:timer
-            interval:2000
+        Timer {
+            id: timer
+            interval: 2000
             repeat: true
             onTriggered: {
                 runScript.console_fill()
                 ADB.ler_arquivos()
-                loading_gif.visible=false
+                loading_gif.visible = false
                 interval.start()
                 timer.stop()
             }
         }
-        Timer{
-            id:interval
+        Timer {
+            id: interval
             interval: 2000
             onTriggered: {
                 timer.start()
-                loading_gif.visible=true
+                loading_gif.visible = true
             }
         }
-        Timer{
-            id:pause_timers
-            interval:5000
+        Timer {
+            id: pause_timers
+            interval: 5000
             repeat: true
             onTriggered: {
                 interval.stop()
                 timer.stop()
             }
         }
-        Timer{
-            id:pause_timers_interval
-            interval:5000
+        Timer {
+            id: pause_timers_interval
+            interval: 5000
             repeat: true
             onTriggered: {
                 pause_timers.stop()
@@ -70,19 +75,19 @@ Item {
         }
     }
 
-    Rectangle{
-        id:mainComponent
+    Rectangle {
+        id: mainComponent
         color: myBackground
         anchors.fill: parent
 
-        Rectangle{
-            id:botao_canectar
+        Rectangle {
+            id: botao_canectar
             radius: 5
             border.width: 2
             color: "grey"
             Text {
                 text: connectDevice
-                anchors.fill:parent
+                anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 fontSizeMode: Text.Fit
@@ -91,30 +96,30 @@ Item {
             }
             width: buttonWidth
             height: buttonHeight
-            anchors{
+            anchors {
                 top: parent.top
                 left: parent.left
                 topMargin: maginHeight
                 leftMargin: marginWidth
             }
-            MouseArea{
+            MouseArea {
                 anchors.fill: parent
-                onPressed: parent.color=buttonPressed
-                onReleased:{
-                    parent.color=buttonRealeased
+                onPressed: parent.color = buttonPressed
+                onReleased: {
+                    parent.color = buttonRealeased
                     ADB.a07_conectar_dispositivos(devicesGrid.currentIndex)
                 }
             }
         }
 
-        Rectangle{
-            id:botao_remover
+        Rectangle {
+            id: botao_remover
             radius: 5
             border.width: 2
             color: "grey"
             Text {
                 text: removeDevice
-                anchors.fill:parent
+                anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 fontSizeMode: Text.Fit
@@ -123,32 +128,32 @@ Item {
             }
             width: buttonWidth
             height: buttonHeight
-            anchors{
+            anchors {
                 top: parent.top
                 right: parent.right
                 topMargin: maginHeight
                 rightMargin: marginWidth
             }
-            MouseArea{
+            MouseArea {
                 anchors.fill: parent
-                onPressed: parent.color=buttonPressed
-                onReleased:{
-                    parent.color=buttonRealeased
+                onPressed: parent.color = buttonPressed
+                onReleased: {
+                    parent.color = buttonRealeased
                     runScript.desconectar_dispositivos()
                 }
             }
         }
 
-        GridView{
-            id:devicesGrid
-            clip:true
+        GridView {
+            id: devicesGrid
+            clip: true
             cellWidth: cellWidth
             cellHeight: cellHeight
             highlightFollowsCurrentItem: false
             focus: true
-            model:ListModel{}
-            height:parent.height/2
-            anchors{
+            model: ListModel {}
+            height: parent.height / 2
+            anchors {
                 top: botao_canectar.bottom
                 topMargin: maginHeight
                 // bottom: botao_hab_wifi.top
@@ -160,10 +165,10 @@ Item {
             }
             highlight: Rectangle {
                 height: cellHeight
-                color:"black"
+                color: "black"
                 width: cellWidth
-                anchors{
-                    top:devicesGrid.currentItem.top
+                anchors {
+                    top: devicesGrid.currentItem.top
                     topMargin: 0
                 }
                 radius: 7
@@ -171,15 +176,15 @@ Item {
                 x: devicesGrid.currentItem.x
                 y: devicesGrid.currentItem.y
             }
-            delegate: Item{
+            delegate: Item {
                 //Column{
-                Rectangle{
-                    id:celula
-                    height: cellHeight-(2*celula_marca_height)
+                Rectangle {
+                    id: celula
+                    height: cellHeight - (2 * celula_marca_height)
                     opacity: 0.89
-                    width: cellWidth-(2*celula_marca_width)
+                    width: cellWidth - (2 * celula_marca_width)
                     radius: 6
-                    anchors{
+                    anchors {
                         top: parent.top
                         topMargin: celula_marca_height
                         left: parent.left
@@ -196,21 +201,21 @@ Item {
                             color: "#f9f586"
                         }
                     }
-                    Image{
-                        id:grid_ico
-                        width: cellWidth/3
-                        height: cellHeight/3
-                        anchors{
+                    Image {
+                        id: grid_ico
+                        width: cellWidth / 3
+                        height: cellHeight / 3
+                        anchors {
                             top: parent.top
                             topMargin: celula_marca_height
                             left: parent.left
                             leftMargin: celula_marca_width
                         }
-                        source:"file:///"+grid_image_path
+                        source: "file:///" + grid_image_path
                         fillMode: Image.Stretch
                     }
-                    Text{
-                        anchors{
+                    Text {
+                        anchors {
                             top: parent.top
                             topMargin: celula_marca_height
                             right: parent.right
@@ -218,7 +223,7 @@ Item {
                             left: grid_ico.right
                             leftMargin: celula_marca_width
                         }
-                        height: cellHeight/2
+                        height: cellHeight / 2
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         //textFormat: Text.RichText
@@ -226,10 +231,10 @@ Item {
                         fontSizeMode: Text.HorizontalFit
                         minimumPixelSize: 1
                         font.pixelSize: 50
-                        text:grid_indice+"."+grid_nome
+                        text: grid_indice + "." + grid_nome
                     }
-                    Text{
-                        anchors{
+                    Text {
+                        anchors {
                             top: grid_ico.bottom
                             topMargin: celula_marca_height
                             right: parent.right
@@ -237,7 +242,7 @@ Item {
                             left: parent.left
                             leftMargin: celula_marca_width
                         }
-                        height: cellHeight/2
+                        height: cellHeight / 2
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         //textFormat: Text.RichText
@@ -247,15 +252,15 @@ Item {
                         font.pixelSize: 50
                         //lineHeight: 0.9
                         //font.pixelSize: parent.height*0.06
-                        text:"<p><i>IP: " + grid_ip+"</p></i>"
-                             +"<p><i>Descricao: " + grid_desc+"</p></i>"
-                             +"<p><i>Imagem: " + grid_image_path+"</p></i>"
+                        text: "<p><i>IP: " + grid_ip + "</p></i>"
+                              + "<p><i>Descricao: " + grid_desc + "</p></i>"
+                              + "<p><i>Imagem: " + grid_image_path + "</p></i>"
                     }
-                    MouseArea{
+                    MouseArea {
                         id: itemMouseArea
                         anchors.fill: parent
                         onClicked: {
-                            devicesGrid.currentIndex=index
+                            devicesGrid.currentIndex = index
                         }
                     }
                 }
@@ -263,137 +268,167 @@ Item {
         }
 
         Rectangle{
-            id:consoleSubComponent
-            color: "#00000000"
-            border.width: 1
-            radius: 6
+            id:mainConsole
+            color: "black"
+            border.width: 2
+            border.color: "#4d4a4a"
             anchors{
-                top: devicesGrid.bottom
-                topMargin: maginHeight
-                bottom:botao_hab_wifi.top
-                bottomMargin: maginHeight
+                top:devicesGrid.bottom
+                bottom:bottomMenu.top
                 left: parent.left
-                leftMargin: marginWidth
                 right:parent.right
+                topMargin: maginHeight
+                bottomMargin: maginHeight
+                leftMargin: marginWidth
                 rightMargin: marginWidth
             }
-            Text {
-                id: console_title
-                horizontalAlignment: Text.AlignHCenter
-                height: parent.height*(15/100)
-                //fontSizeMode: Text.Fill
-                minimumPixelSize: 1
-                font.pixelSize: 20
-                anchors{
+            Rectangle{
+                id:titleBar
+                color: "#4d4a4a"
+                height: parent.height * (20 / 100)
+                anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
                 }
+                Text {
+                    id: console_title
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: "white"
+                    fontSizeMode: Text.Fill
+                    minimumPixelSize: 1
+                }
             }
-            Text{
-                id:console_area
-                lineHeight: 1.5
-                anchors{
-                    top:console_title.bottom
+
+            Text {
+                id: console_area
+                lineHeight: 0.9
+                fontSizeMode: Text.Fill
+                color: "white"
+                minimumPixelSize: 1
+                horizontalAlignment: Text.AlignJustify
+                verticalAlignment: Text.AlignTop
+                anchors {
+                    top: titleBar.bottom
                     bottom: parent.bottom
                     left: parent.left
                     leftMargin: marginWidth
                     right: parent.right
                 }
             }
+
         }
 
         Rectangle{
-            id:botao_hab_wifi
-            radius: 5
-            border.width: 2
-            color: "grey"
-            Text {
-                text: setWifi
-                anchors.fill:parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-                wrapMode: Text.WrapAnywhere
-            }
-            width: buttonWidth
-            height: buttonHeight
+            id:bottomMenu
+            color: "#00000000"
+            height: parent.height*0.1
             anchors{
                 bottom: parent.bottom
-                left: parent.left
-                bottomMargin: maginHeight
-                leftMargin: marginWidth
+                left:parent.left
+                right:parent.right
             }
-            MouseArea{
-                anchors.fill: parent
-                onPressed: parent.color=buttonPressed
-                onReleased:{
-                    parent.color=buttonRealeased
-                    runScript.run()
+            Rectangle {
+                id: botao_hab_wifi
+                color: "grey"
+                width: (parent.width*0.515)-(marginWidth)
+                height: buttonHeight
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                }
+                Text {
+                    text: setWifi
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAnywhere
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: parent.color = buttonPressed
+                    onReleased: {
+                        parent.color = buttonRealeased
+                        runScript.run()
+                    }
                 }
             }
+
+            Rectangle{
+                id:bottomSeparator
+                color: "#827f7f"
+                height: parent.height
+                border.width: 1
+                border.color:"white"
+                anchors{
+                    bottom: parent.bottom
+                    left: botao_hab_wifi.right
+                    right: botao_cadastrar.left
+                }
+            }
+
+            Rectangle {
+                id: botao_cadastrar
+                color: "grey"
+                width: (parent.width*0.515)-(marginWidth)
+                height: buttonHeight
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                }
+                Text {
+                    text: toSettingsPage
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAnywhere
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: parent.color = buttonPressed
+                    onReleased: {
+                        parent.color = buttonRealeased
+                        stackView.push(settingsPage)
+                    }
+                }
+            }
+
         }
 
-        Rectangle{
-            id:botao_cadastrar
-            radius: 5
-            border.width: 2
-            color: "grey"
-            Text {
-                text: toSettingsPage
-                anchors.fill:parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-                wrapMode: Text.WrapAnywhere
-            }
-            width: buttonWidth
-            height: buttonHeight
-            anchors{
-                bottom: parent.bottom
-                right: parent.right
-                bottomMargin: maginHeight
-                rightMargin: marginWidth
-            }
-            MouseArea{
-                anchors.fill: parent
-                onPressed: parent.color=buttonPressed
-                onReleased:{ parent.color=buttonRealeased; stackView.push(settingsPage)}
-                //                                onPressed: parent.color=botao_pressionado
-                //                                onReleased:{ parent.color=botao_solto; janela_cadastro.visible=true}
-            }
-        }
-
-        StackView{
-            id:stackDebug
-            x:posX
-            y:posY
-            onXChanged:posX=stackDebug.x
-            onYChanged:posY=stackDebug.y
+        StackView {
+            id: stackDebug
+            x: posX
+            y: posY
+            onXChanged: posX = stackDebug.x
+            onYChanged: posY = stackDebug.y
             width: debugWindowWidth
             height: debugWindowHeight
             clip: false
             rotation: 0
             initialItem: debugFloatingWindow
         }
-        Component{
-            id:debugFloatingWindow
-            Debug{}
-        }
 
+        Component {
+            id: debugFloatingWindow
+            Debug {}
+        }
     }
 
-    AnimatedImage{
+    AnimatedImage {
         id: loading_gif
         source: "imagens/loading-buffering.gif"
         anchors.fill: parent
-        anchors{
-            topMargin: parent.height*(13/100)
-            bottomMargin: parent.height*(77/100)
-            leftMargin: parent.width*(85/100)
-            rightMargin: parent.width*(5/100)
+        anchors {
+            topMargin: parent.height * (13 / 100)
+            bottomMargin: parent.height * (77 / 100)
+            leftMargin: parent.width * (85 / 100)
+            rightMargin: parent.width * (5 / 100)
         }
     }
 }
@@ -403,3 +438,4 @@ Designer {
     D{i:0;autoSize:true;formeditorZoom:0.75;height:480;width:640}D{i:48;invisible:true}
 }
 ##^##*/
+

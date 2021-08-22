@@ -10,7 +10,6 @@ import QtQuick.Extras 1.4
 import 'mainLogic.js' as JS
 
 Item {
-
     Component.onCompleted: {
         if(click){
             debug.color="#00000000"
@@ -23,6 +22,12 @@ Item {
         }
         if(lockPosition)mouseAreaComponent.color="white"
         if(!lockPosition)mouseAreaComponent.color="red"
+        if(!debugStarted){
+            debugStarted=true
+            debug.color="#00000000"
+            debug.border.width=0
+            row.visible=false
+        }
     }
     Rectangle {
         id: debug
@@ -36,8 +41,8 @@ Item {
             anchors{
                 bottom:parent.bottom
                 right:parent.right
-                bottomMargin: 5
-                rightMargin: 20
+                rightMargin: (parent.width*0.5)-(width*0.5)
+                bottomMargin: parent.height*0.01
             }
 
             radius: 100
@@ -55,10 +60,10 @@ Item {
                     if(!lockPosition){
                         switch(currentPage){
                         case 0:
-                            newPosition=mapToItem(mainItem,mouse.x-debug.width+25,mouse.y-debug.height+15)
+                            newPosition=mapToItem(mainItem,mouse.x-debug.width+150,mouse.y-debug.height+15)
                             break
                         case 1:
-                            newPosition=mapToItem(settingsItem,mouse.x-debug.width+25,mouse.y-debug.height+15)
+                            newPosition=mapToItem(settingsItem,mouse.x-debug.width+150,mouse.y-debug.height+15)
                             break
                         }
                         stackDebug.x=newPosition.x
@@ -86,6 +91,8 @@ Item {
 
                 // position movement : color yellow
                 onPressAndHold: {
+                    text8.text="largura="+appWindow.width
+                    text7.text="altura="+appWindow.height
                     switch(currentPage){
                     case 0:
                         text2.text=field2+" on main"

@@ -15,11 +15,15 @@ Item {
     id:settingsItem
     Component.onCompleted: {
         currentPage=1
+            if(!settingsPAgeFirstTime){
+                settingsPAgeFirstTime=true
+                posY=appWindow.height*0.6
+            }
     }
 
     Rectangle {
         id: janela_cadastro
-        gradient: background
+        color: myBackground
         anchors.fill: parent
 
         TextField{
@@ -83,77 +87,94 @@ Item {
         }
 
         Rectangle{
-            id:cadastro_cadastrar
-            radius: 5
-            border.width: 2
-            color: "grey"
-            Text {
-                text: toSettingsPage
-                anchors.fill:parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-                wrapMode: Text.WrapAnywhere
-            }
-            width: buttonWidth
-            height: buttonHeight
+            id:bottomMenu
+            color: "#00000000"
+            height: parent.height*0.1
             anchors{
                 bottom: parent.bottom
-                left: parent.left
-                bottomMargin: maginHeight
-                leftMargin: marginWidth
+                left:parent.left
+                right:parent.right
             }
-            MouseArea{
-                anchors.fill: parent
-                onPressed: parent.color=buttonPressed
-                onReleased:{
-                    parent.color=buttonRealeased
-                    runScript.console_fill()
-                    ADB.a05_cadastrar_dispositivo()
-                    janela_cadastro.visible=false
-                    ADB.a04_carregar_dispositivos()
-                    ADB.ler_arquivos()
+            Rectangle{
+                id:cadastro_cadastrar
+                color: "grey"
+                width: (parent.width*0.515)-(marginWidth)
+                height: buttonHeight
+                anchors{
+                    bottom: parent.bottom
+                    left: parent.left
+                }
+                Text {
+                    text: toSettingsPage
+                    anchors.fill:parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAnywhere
+                }
+
+                MouseArea{
+                    anchors.fill: parent
+                    onPressed: parent.color=buttonPressed
+                    onReleased:{
+                        parent.color=buttonRealeased
+                        runScript.console_fill()
+                        ADB.a05_cadastrar_dispositivo()
+                        janela_cadastro.visible=false
+                        ADB.a04_carregar_dispositivos()
+                        ADB.ler_arquivos()
+                    }
+                }
+            }
+
+            Rectangle{
+                id:bottomSeparator
+                color: "#827f7f"
+                height: parent.height
+                border.width: 1
+                border.color:"white"
+                anchors{
+                    bottom: parent.bottom
+                    left: cadastro_cadastrar.right
+                    right: cadastro_voltar.left
+                }
+            }
+
+            Rectangle{
+                id:cadastro_voltar
+                radius: 5
+                color: "grey"
+                width: (parent.width*0.515)-(marginWidth)
+                height: buttonHeight
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                }
+                Text {
+                    text: previousPage
+                    anchors.fill:parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAnywhere
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onPressed: parent.color=buttonPressed
+                    onReleased:{
+                        stackView.push(mainPage)
+                        parent.color=buttonRealeased
+                        janela_cadastro.visible=false
+                        runScript.console_fill()
+                        ADB.ler_arquivos()
+                    }
                 }
             }
         }
-
-        Rectangle{
-            id:cadastro_voltar
-            radius: 5
-            border.width: 2
-            color: "grey"
-            Text {
-                text: previousPage
-                anchors.fill:parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-                wrapMode: Text.WrapAnywhere
-            }
-            width: buttonWidth
-            height: buttonHeight
-            anchors{
-                bottom: parent.bottom
-                right: parent.right
-                bottomMargin: maginHeight
-                rightMargin: marginWidth
-            }
-            MouseArea{
-                anchors.fill: parent
-                onPressed: parent.color=buttonPressed
-                onReleased:{
-                    stackView.push(mainPage)
-                    parent.color=buttonRealeased
-                    janela_cadastro.visible=false
-                    runScript.console_fill()
-                    ADB.ler_arquivos()
-                }
-            }
-        }
-
     }
+
     StackView{
         id:stackDebug
         x:posX
@@ -168,6 +189,7 @@ Item {
         onXChanged:posX=stackDebug.x
         onYChanged:posY=stackDebug.y
     }
+
     Component{
         id:debugFloatingWindow
         Debug{}
