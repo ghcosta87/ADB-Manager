@@ -17,6 +17,8 @@ ApplicationWindow{
     height:windowHeight
     x:SQL.windowHandler("window_x")
     y:SQL.windowHandler("window_y")
+    minimumHeight: 369
+    minimumWidth: 375
     visible: true
     title: applicationTitle
 
@@ -29,6 +31,7 @@ ApplicationWindow{
 
     //  COLORS
     property string myBackground: "#a1a1a1"
+    property string myBottomBackground: "#a1a1a1"
 
     property string buttonPressed: "#d7d7d7"
     property string buttonRealeased: "#545454"
@@ -56,6 +59,7 @@ ApplicationWindow{
     //  STRINGS
     property string connectDevice: "CONNECT"
     property string removeDevice: "DISCONNECT"
+    property string addDevice: "ADD DEVICE"
     property string setWifi: "ACTIVATE WI-FI"
     property string toSettingsPage: "SETTINGS"
     property string previousPage: "BACK"
@@ -64,7 +68,11 @@ ApplicationWindow{
     //  CONTROL VARIABLES
     property bool click
     property bool lockPosition
+    property bool mainPageFirstTime
+    property bool settingsPAgeFirstTime
+    property bool debugStarted
     property var currentPage
+    property var imageSelection
 
     //  POSTITION VARIABLES
     property int posX
@@ -117,14 +125,6 @@ ApplicationWindow{
         Component{
             id:settingsPage
             SettingsPage{}
-        }
-
-        Component.onCompleted: {
-            lockPosition=false
-            hideComponent=false
-            click=false
-            posX=0
-            posy=0
         }
 
         Component.onDestruction: {
