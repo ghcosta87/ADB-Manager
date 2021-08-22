@@ -756,6 +756,7 @@ qrc_qml.cpp: qml.qrc \
 		sqlDatabase.js \
 		adbCommands.js \
 		MainPage.qml \
+		htmlGrab.js \
 		main_old.qml \
 		mainLogic.js \
 		SettingsPage.qml \
@@ -766,6 +767,11 @@ qrc_qml.cpp: qml.qrc \
 		scripts/desconectar.sh \
 		scripts/data_import.sh \
 		imagens/loading-buffering.gif \
+		querys/query3.json \
+		querys/query2.json \
+		querys/query1.json \
+		querys/query4.json \
+		querys/originalGET.json \
 		ScreenShots/DeviceAttached.png \
 		ScreenShots/MainScreen.png \
 		ScreenShots/AddDeviceScreen.png
@@ -1026,11 +1032,14 @@ run_command.o: run_command.cpp ../../../../.programas/qt/5.15.2/gcc_64/include/Q
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qcontainerfwd.h \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qobject_impl.h \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qeventloop.h \
+		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/QFile \
+		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qfile.h \
+		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qiodevice.h \
 		run_command.h \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/QProcess \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qprocess.h \
-		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qiodevice.h \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qshareddata.h \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/qhash.h \
 		../../../../.programas/qt/5.15.2/gcc_64/include/QtCore/QDebug \

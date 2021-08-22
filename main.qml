@@ -59,6 +59,7 @@ ApplicationWindow{
     //  STRINGS
     property string connectDevice: "CONNECT"
     property string removeDevice: "DISCONNECT"
+    property string addDevice: "ADD DEVICE"
     property string setWifi: "ACTIVATE WI-FI"
     property string toSettingsPage: "SETTINGS"
     property string previousPage: "BACK"
@@ -71,6 +72,7 @@ ApplicationWindow{
     property bool settingsPAgeFirstTime
     property bool debugStarted
     property var currentPage
+    property var imageSelection
 
     //  POSTITION VARIABLES
     property int posX

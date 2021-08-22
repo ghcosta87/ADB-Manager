@@ -29,6 +29,7 @@ Item {
         if(!mainPageFirstTime){
             mainPageFirstTime=true
             posY=appWindow.height*0.6
+            posX=appWindow.width*0.5
             click=!click
         }
     }
