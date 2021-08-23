@@ -1,12 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>main_old.qml</file>
         <file>adbCommands.js</file>
-        <file>imagens/loading-buffering.gif</file>
+        <file>imagens/loadingBuffering.gif</file>
         <file>scripts/adb_wifi_config.sh</file>
         <file>scripts/conectar.sh</file>
         <file>scripts/data_import.sh</file>
-        <file>scripts/desconectar.sh</file>
+        <file>scripts/kill-server.sh</file>
         <file>ScreenShots/AddDeviceScreen.png</file>
         <file>ScreenShots/DeviceAttached.png</file>
         <file>ScreenShots/MainScreen.png</file>
@@ -22,5 +21,7 @@
         <file>querys/query2.json</file>
         <file>querys/query3.json</file>
         <file>querys/query4.json</file>
+        <file>imagens/searchBackground.jpeg</file>
+        <file>scripts/adb_wifi_disconnect.sh</file>
     </qresource>
 </RCC>
