@@ -21,7 +21,7 @@ Item {
             row.visible=true
         }
         if(lockPosition)mouseAreaComponent.color="white"
-        if(!lockPosition)mouseAreaComponent.color="red"
+        if(!lockPosition)mouseAreaComponent.color="#787878"
         if(!debugStarted){
             debugStarted=true
             debug.color="#00000000"
@@ -37,7 +37,7 @@ Item {
         radius: 5
         Rectangle{
             id:mouseAreaComponent
-            color: "red"
+            color: "#787878"
             anchors{
                 bottom:parent.bottom
                 right:parent.right
@@ -76,23 +76,13 @@ Item {
 
                 //   position locker : color white
                 onClicked: {
-                    text1.text=field1+posX
-                    text2.text=field2+posY
-                    text3.text=field3
-                    text4.text=field4
-                    text5.text=field5
-                    text6.text=field6
-                    text7.text=field7
-                    text8.text=field8
                     lockPosition=!lockPosition
                     if(lockPosition)mouseAreaComponent.color="white"
-                    if(!lockPosition)mouseAreaComponent.color="red"
+                    if(!lockPosition)mouseAreaComponent.color="#787878"
                 }
 
                 // position movement : color yellow
                 onPressAndHold: {
-                    text8.text="largura="+appWindow.width
-                    text7.text="altura="+appWindow.height
                     switch(currentPage){
                     case 0:
                         text2.text=field2+" on main"
@@ -103,10 +93,10 @@ Item {
                     mouseAreaComponent.color="yellow"
                 }
 
-                // release pos : color white or red
+                // release pos : color white or #787878
                 onReleased: {
                     if(lockPosition)mouseAreaComponent.color="white"
-                    if(!lockPosition)mouseAreaComponent.color="red"
+                    if(!lockPosition)mouseAreaComponent.color="#787878"
                 }
 
                 // hide button : no color change
@@ -146,7 +136,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text: debug_field_1.text
                     font.pixelSize: 12
                 }
 
@@ -155,7 +145,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     width: parent.width
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text: debug_field_2.text
                     font.pixelSize: 12
                 }
 
@@ -164,7 +154,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text: debug_field_3.text
                     font.pixelSize: 12
                 }
 
@@ -173,7 +163,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text:debug_field_4.text
                     font.pixelSize: 12
                 }
 
@@ -189,7 +179,7 @@ Item {
                     width: parent.width
                     color: "#e8e7e7"
                     horizontalAlignment: Text.AlignHCenter
-                    text: qsTr("Text")
+                    text:debug_field_5.text
                     font.pixelSize: 12
                 }
 
@@ -199,7 +189,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text: debug_field_6.text
                     font.pixelSize: 12
                 }
 
@@ -208,7 +198,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     width: parent.width
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text:debug_field_7.text
                     font.pixelSize: 12
                 }
 
@@ -221,7 +211,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     width: parent.width
                     color: "#e8e7e7"
-                    text: qsTr("Text")
+                    text:debug_field_8.text
                     font.pixelSize: 12
                 }
             }

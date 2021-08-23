@@ -18,19 +18,15 @@ Item {
     Component.onCompleted: {
         SQL.startDatabase()
         SQL.setSavedData()
-        ADB.a04_carregar_dispositivos()
-        ADB.ler_arquivos()
         SQL.loadDevices()
-
-        //janela_cadastro.visible=false
         timer.start()
-
         currentPage = 0
-        if(!mainPageFirstTime){
-            mainPageFirstTime=true
-            posY=appWindow.height*0.6
-            posX=appWindow.width*0.5
-            click=!click
+        if (!mainPageFirstTime) {
+            mainPageFirstTime = true
+            posY = appWindow.height -(appWindow.height * 0.6)
+            posX = appWindow.width-(appWindow.width * 0.5)
+            click = !click
+            console_title_text.text = "## - AGUARDANDO CONEXÃO - ##"
         }
     }
 
@@ -38,22 +34,26 @@ Item {
         visible: false
         Timer {
             id: timer
-            interval: 2000
+            interval: 100
             repeat: true
             onTriggered: {
-                runScript.console_fill()
-                ADB.ler_arquivos()
-                loading_gif.visible = false
-                interval.start()
-                timer.stop()
+                if (JS.textToBool(loading_timer_control.text)) {
+                    interval.start()
+                    timer.stop()
+                } else {
+                    timer.start()
+                }
             }
         }
         Timer {
             id: interval
-            interval: 2000
+            interval: 1500
             onTriggered: {
+                ADB.load_content()
+                loading_timer_control.text = "false"
                 timer.start()
-                loading_gif.visible = true
+                interval.stop()
+                //loading_gif.visible = true
             }
         }
         Timer {
@@ -81,99 +81,32 @@ Item {
         color: myBackground
         anchors.fill: parent
 
-        Rectangle {
-            id: botao_canectar
-            radius: 5
-            border.width: 2
-            color: "grey"
-            Text {
-                text: connectDevice
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-                wrapMode: Text.WrapAnywhere
-            }
-            width: buttonWidth
-            height: buttonHeight
-            anchors {
-                top: parent.top
-                left: parent.left
-                topMargin: maginHeight
-                leftMargin: marginWidth
-            }
-            MouseArea {
-                anchors.fill: parent
-                onPressed: parent.color = buttonPressed
-                onReleased: {
-                    parent.color = buttonRealeased
-                    ADB.a07_conectar_dispositivos(devicesGrid.currentIndex)
-                }
-            }
-        }
-
-        Rectangle {
-            id: botao_remover
-            radius: 5
-            border.width: 2
-            color: "grey"
-            Text {
-                text: removeDevice
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-                wrapMode: Text.WrapAnywhere
-            }
-            width: buttonWidth
-            height: buttonHeight
-            anchors {
-                top: parent.top
-                right: parent.right
-                topMargin: maginHeight
-                rightMargin: marginWidth
-            }
-            MouseArea {
-                anchors.fill: parent
-                onPressed: parent.color = buttonPressed
-                onReleased: {
-                    parent.color = buttonRealeased
-                    runScript.desconectar_dispositivos()
-                }
-            }
-        }
-
         GridView {
             id: devicesGrid
-            clip: true
-            cellWidth: cellWidth
-            cellHeight: cellHeight
+            //            clip: true
+            cellWidth: cellWidthProp
+            cellHeight: cellHeightProp
             highlightFollowsCurrentItem: false
             focus: true
             model: ListModel {}
-            height: parent.height / 2
+            height: parent.height *0.6
             anchors {
-                top: botao_canectar.bottom
-                topMargin: maginHeight
-                // bottom: botao_hab_wifi.top
-                //bottomMargin: height_margin
+                top: parent.top
+                topMargin: marginHeight+globalMenu.height
                 left: parent.left
                 leftMargin: marginWidth
                 right: parent.right
                 rightMargin: marginWidth
             }
             highlight: Rectangle {
-                height: cellHeight
+                height: cellHeightProp
                 color: "black"
-                width: cellWidth
+                width: cellWidthProp
                 anchors {
                     top: devicesGrid.currentItem.top
                     topMargin: 0
                 }
-                radius: 7
-                border.width: 2
+                radius: 4
                 x: devicesGrid.currentItem.x
                 y: devicesGrid.currentItem.y
             }
@@ -181,82 +114,96 @@ Item {
                 //Column{
                 Rectangle {
                     id: celula
-                    height: cellHeight - (2 * celula_marca_height)
+                    height: cellHeightProp - (2 * celula_marca_height)
                     opacity: 0.89
-                    width: cellWidth - (2 * celula_marca_width)
+                    width: cellWidthProp - (2 * celula_marca_width)
                     radius: 6
+                    color: consoleBorderColor
                     anchors {
                         top: parent.top
                         topMargin: celula_marca_height
                         left: parent.left
                         leftMargin: celula_marca_width
                     }
-                    gradient: Gradient {
-                        GradientStop {
-                            position: 0
-                            color: "#96fbc4"
-                        }
 
-                        GradientStop {
-                            position: 1
-                            color: "#f9f586"
+                    Rectangle{
+                        id:grid_title
+                        height: cellHeightProp *0.18
+                        color: noColor
+                        anchors {
+                            top: parent.top
+                            topMargin: celula_marca_height
+                            right: parent.right
+                            rightMargin: celula_marca_width
+                            left: parent.left
+                            leftMargin: celula_marca_width
+                        }
+                        Text {
+                            anchors.fill: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.WrapAnywhere
+                            font.italic: false
+                            font.bold: true
+                            fontSizeMode: Text.VerticalFit
+                            minimumPixelSize: 1
+                            text: grid_indice + "." + grid_nome
                         }
                     }
+
+                    Rectangle{
+                        id: grid_ico_container
+                        color:consoleTitleColor
+                        width:  grid_ico_container.height
+                        radius: 6
+                        anchors {
+                            top: grid_title.bottom
+                            topMargin: celula_marca_height
+                            bottom: parent.bottom
+                            bottomMargin: celula_marca_height
+                            right:parent.right
+                            rightMargin: celula_marca_width
+                        }
+                    }
+
                     Image {
                         id: grid_ico
-                        width: cellWidth / 3
-                        height: cellHeight / 3
-                        anchors {
-                            top: parent.top
-                            topMargin: celula_marca_height
-                            left: parent.left
-                            leftMargin: celula_marca_width
-                        }
-                        source: "file:///" + grid_image_path
+                        width :grid_ico_container.width-(marginWidth*0.5)
+                        height:grid_ico_container.height-(marginHeight*0.5)
+                        source: grid_image_path
                         fillMode: Image.Stretch
-                    }
-                    Text {
                         anchors {
-                            top: parent.top
-                            topMargin: celula_marca_height
-                            right: parent.right
-                            rightMargin: celula_marca_width
-                            left: grid_ico.right
-                            leftMargin: celula_marca_width
+                            top: grid_title.bottom
+                            topMargin: celula_marca_height*2
+                            bottom: parent.bottom
+                            bottomMargin: celula_marca_height*2
+                            right:parent.right
+                            rightMargin: celula_marca_width*2
                         }
-                        height: cellHeight / 2
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        //textFormat: Text.RichText
-                        wrapMode: Text.WrapAnywhere
-                        fontSizeMode: Text.HorizontalFit
-                        minimumPixelSize: 1
-                        font.pixelSize: 50
-                        text: grid_indice + "." + grid_nome
                     }
+
+
                     Text {
                         anchors {
-                            top: grid_ico.bottom
-                            topMargin: celula_marca_height
-                            right: parent.right
+                            top: grid_title.bottom
+                            bottom: parent.bottom
+                            right: grid_ico_container.left
                             rightMargin: celula_marca_width
                             left: parent.left
                             leftMargin: celula_marca_width
                         }
-                        height: cellHeight / 2
+
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        //textFormat: Text.RichText
-                        wrapMode: Text.WrapAnywhere
+                        textFormat: Text.RichText
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                         fontSizeMode: Text.Fit
                         minimumPixelSize: 1
-                        font.pixelSize: 50
-                        //lineHeight: 0.9
-                        //font.pixelSize: parent.height*0.06
-                        text: "<p><i>IP: " + grid_ip + "</p></i>"
-                              + "<p><i>Descricao: " + grid_desc + "</p></i>"
-                              + "<p><i>Imagem: " + grid_image_path + "</p></i>"
+                        text: "<p><i>" + grid_ip + "</p></i>"
+                              + "<p><i>" + grid_desc + "</p></i>"
+                        //                              + "<p><i>Imagem: " + grid_image_path + "</p></i>"
                     }
+
                     MouseArea {
                         id: itemMouseArea
                         anchors.fill: parent
@@ -268,23 +215,78 @@ Item {
             }
         }
 
-        Rectangle{
-            id:mainConsole
-            color: "black"
+        Rectangle {
+            id: mainConsole
+            color: consoleColor
             border.width: 2
-            border.color: "#4d4a4a"
-            anchors{
-                top:devicesGrid.bottom
-                bottom:bottomMenu.top
+            border.color: consoleBorderColor
+            anchors {
+                top: devicesGrid.bottom
+                bottom: parent.bottom
                 left: parent.left
-                right:parent.right
-                topMargin: maginHeight
-                bottomMargin: maginHeight
+                right: parent.right
+                topMargin: marginHeight
+                bottomMargin: marginHeight
                 leftMargin: marginWidth
                 rightMargin: marginWidth
             }
-            Rectangle{
-                id:titleBar
+
+            Rectangle {
+                id: loadingArea
+                color: '#00000000'
+                width: 70
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    right: parent.right
+                    topMargin: titleBar.height + marginHeight
+                    rightMargin: marginWidth
+                }
+
+                Rectangle {
+                    id: loading_gif_rec
+                    width: loading_gif_rec.height
+                    color: '#00000000'
+                    anchors {
+                        top: parent.top
+                        bottom: loading_text_rec.top
+                        right: parent.right
+                        left: parent.left
+                        bottomMargin: marginHeight - 5
+                    }
+                    AnimatedImage {
+                        id: loading_gif
+                        visible: JS.textToBool(loading_gif_visibility.text)
+                        source: "imagens/loadingBuffering.gif"
+                        anchors.fill: parent
+                    }
+                }
+
+                Rectangle {
+                    id: loading_text_rec
+                    color: '#00000000'
+                    height: parent.height * 0.2
+                    anchors {
+                        bottom: loadingArea.bottom
+                        right: parent.right
+                        left: parent.left
+                    }
+                    Text {
+                        id: loading_text
+                        color: "white"
+                        visible: JS.textToBool(loading_text_visibility.text)
+                        text: loading_text_context.text
+                        anchors.fill: parent
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        fontSizeMode: Text.Fit
+                        minimumPixelSize: 1
+                    }
+                }
+            }
+
+            Rectangle {
+                id: titleBar
                 color: "#4d4a4a"
                 height: parent.height * (20 / 100)
                 anchors {
@@ -295,6 +297,7 @@ Item {
                 Text {
                     id: console_title
                     anchors.fill: parent
+                    text: console_title_text.text
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: "white"
@@ -308,6 +311,7 @@ Item {
                 lineHeight: 0.9
                 fontSizeMode: Text.Fill
                 color: "white"
+                text: console_area_text.text
                 minimumPixelSize: 1
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
@@ -319,87 +323,6 @@ Item {
                     right: parent.right
                 }
             }
-
-        }
-
-        Rectangle{
-            id:bottomMenu
-            color: "#00000000"
-            height: parent.height*0.1
-            anchors{
-                bottom: parent.bottom
-                left:parent.left
-                right:parent.right
-            }
-            Rectangle {
-                id: botao_hab_wifi
-                color: "grey"
-                width: (parent.width*0.515)-(marginWidth)
-                height: buttonHeight
-                anchors {
-                    bottom: parent.bottom
-                    left: parent.left
-                }
-                Text {
-                    text: setWifi
-                    anchors.fill: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    fontSizeMode: Text.Fit
-                    minimumPixelSize: 1
-                    wrapMode: Text.WrapAnywhere
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: parent.color = buttonPressed
-                    onReleased: {
-                        parent.color = buttonRealeased
-                        runScript.run()
-                    }
-                }
-            }
-
-            Rectangle{
-                id:bottomSeparator
-                color: "#827f7f"
-                height: parent.height
-                border.width: 1
-                border.color:"white"
-                anchors{
-                    bottom: parent.bottom
-                    left: botao_hab_wifi.right
-                    right: botao_cadastrar.left
-                }
-            }
-
-            Rectangle {
-                id: botao_cadastrar
-                color: "grey"
-                width: (parent.width*0.515)-(marginWidth)
-                height: buttonHeight
-                anchors {
-                    bottom: parent.bottom
-                    right: parent.right
-                }
-                Text {
-                    text: toSettingsPage
-                    anchors.fill: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    fontSizeMode: Text.Fit
-                    minimumPixelSize: 1
-                    wrapMode: Text.WrapAnywhere
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: parent.color = buttonPressed
-                    onReleased: {
-                        parent.color = buttonRealeased
-                        stackView.push(settingsPage)
-                    }
-                }
-            }
-
         }
 
         StackView {
@@ -420,23 +343,4 @@ Item {
             Debug {}
         }
     }
-
-    AnimatedImage {
-        id: loading_gif
-        source: "imagens/loading-buffering.gif"
-        anchors.fill: parent
-        anchors {
-            topMargin: parent.height * (13 / 100)
-            bottomMargin: parent.height * (77 / 100)
-            leftMargin: parent.width * (85 / 100)
-            rightMargin: parent.width * (5 / 100)
-        }
-    }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:480;width:640}D{i:48;invisible:true}
-}
-##^##*/
-
