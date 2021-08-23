@@ -28,104 +28,207 @@ Item {
         color: myBackground
         anchors.fill: parent
 
-        TextField {
-            id: nome
-            //text:"Disite o nome do dispositivo"
-            text: "foto sm-n9600"
-            height: inputTextHeight
-            anchors {
-                top: parent.top
-                topMargin: maginHeight
-                left: parent.left
-                leftMargin: marginWidth
-                right: parent.right
-                rightMargin: marginWidth
+        Rectangle {
+            id: fields
+            color: noColor
+            border.width: 1
+            border.color: "white"
+            anchors.fill: parent
+            anchors.bottomMargin: parent.height * 0.55
+            TextField {
+                id: nome
+                text:"Disite o nome do dispositivo"
+                height: inputTextHeight
+                anchors {
+                    top: parent.top
+                    topMargin: marginHeight
+                    left: parent.left
+                    leftMargin: marginWidth
+                    right: parent.right
+                    rightMargin: marginWidth
+                }
+                onPressed: clear()
             }
-            onPressed: clear()
-        }
 
-        TextField {
-            id: ip
-            text: "Digite o IP do dispositivo"
-            height: inputTextHeight
-            anchors {
-                top: nome.bottom
-                topMargin: maginHeight
-                left: parent.left
-                leftMargin: marginWidth
-                right: parent.right
-                rightMargin: marginWidth
+            TextField {
+                id: ip
+                text: "Digite o IP do dispositivo"
+                height: inputTextHeight
+                anchors {
+                    top: nome.bottom
+                    topMargin: marginHeight
+                    left: parent.left
+                    leftMargin: marginWidth
+                    right: parent.right
+                    rightMargin: marginWidth
+                }
+                onPressed: clear()
             }
-            onPressed: clear()
-        }
 
-        TextField {
-            id: image_path
-            text: "Digite o caminho completo para o icone"
-            height: inputTextHeight
-            anchors {
-                top: ip.bottom
-                topMargin: maginHeight
-                left: parent.left
-                leftMargin: marginWidth
-                right: parent.right
-                rightMargin: marginWidth
+            TextField {
+                id: image_path
+                text: "Digite o caminho completo para o icone"
+                height: inputTextHeight
+                anchors {
+                    top: ip.bottom
+                    topMargin: marginHeight
+                    left: parent.left
+                    leftMargin: marginWidth
+                    right: parent.right
+                    rightMargin: marginWidth
+                }
+                onPressed: clear()
             }
-            onPressed: clear()
-        }
 
-        TextField {
-            id: descricao
-            text: "Adicione a descricao"
-            height: inputTextHeight
-            anchors {
-                top: image_path.bottom
-                topMargin: maginHeight
-                left: parent.left
-                leftMargin: marginWidth
-                right: parent.right
-                rightMargin: marginWidth
-            }
-            onPressed: clear()
-        }
-
-        Image {
-            id: grabResultImage
-            width: parent.width * 0.5
-            source: "imagens/loading-buffering.gif"
-            anchors {
-                top: descricao.bottom
-                bottom: bottomMenu.top
-                left: parent.left
+            TextField {
+                id: descricao
+                text: "Adicione a descricao"
+                height: inputTextHeight
+                anchors {
+                    top: image_path.bottom
+                    topMargin: marginHeight
+                    left: parent.left
+                    leftMargin: marginWidth
+                    right: parent.right
+                    rightMargin: marginWidth
+                }
+                onPressed: clear()
             }
         }
 
         Rectangle {
-            id: bottomMenu
-            color: "#00000000"
-            height: parent.height * 0.1
+            id: loadConnectedDevice
+            color: buttonRealeased
+            width: (parent.width * 0.515) - (marginWidth)
+            height: buttonHeight
             anchors {
+                top: fields.bottom
+                right: parent.right
+                topMargin: marginHeight
+                rightMargin: marginWidth
+            }
+            Text {
+                text: loadDevice
+                anchors.fill: parent
+                color: textColor
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                fontSizeMode: Text.Fit
+                minimumPixelSize: 1
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: parent.color = buttonPressed
+                onReleased: {
+                    parent.color = buttonRealeased
+                    //COLOCAR AKI OS SCRIPT PARA CARREGAR OS
+                    //DADOS DO APARELHO CONECTADO
+                }
+            }
+        }
+
+        Rectangle {
+            id: registerDevice
+            color: buttonRealeased
+            width: (parent.width * 0.515) - (marginWidth)
+            height: buttonHeight
+            anchors {
+                top: loadConnectedDevice.bottom
+                right: parent.right
+                topMargin: marginHeight
+                rightMargin: marginWidth
+            }
+            Text {
+                text: addDevice
+                anchors.fill: parent
+                color: textColor
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                fontSizeMode: Text.Fit
+                minimumPixelSize: 1
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: parent.color = buttonPressed
+                onReleased: {
+                    parent.color = buttonRealeased
+                    SQL.registerDevice()
+                    //COLOCAR AKI OS SCRIPT PARA CARREGAR OS
+                    //DADOS DO APARELHO CONECTADO
+                }
+            }
+        }
+
+
+        Rectangle {
+            id: imageSelectionArea
+            color: noColor
+            anchors {
+                top: fields.bottom
                 bottom: parent.bottom
                 left: parent.left
-                right: parent.right
+                right: loadConnectedDevice.left
+                topMargin: marginHeight
+                bottomMargin: marginHeight
+                rightMargin: marginWidth
+                leftMargin: marginWidth
             }
             Rectangle {
-                id: cadastro_cadastrar
-                color: "grey"
-                width: (parent.width * 0.515) - (marginWidth)
-                height: buttonHeight
+                id: imageContainer
+                anchors.fill: parent
+                color: noColor
+                border.width: 1
+                border.color: consoleBorderColor
+                anchors.bottomMargin: marginHeight * 3
+                Image {
+                    id: grabResultImage
+                    visible: !JS.textToBool(loading_iamge_gif_visibility.text)
+                    source: "imagens/searchBackground.jpeg"
+                    anchors.fill: parent
+                    onStatusChanged: {
+                        if (grabResultImage.status === grabResultImage.Loading) {
+                            console.log("iamge loading")
+                            loadingImage.visible = true
+                        }
+                        if (grabResultImage.status === grabResultImage.Ready) {
+                            console.log("iamge ready")
+                            loadingImage.visible = false
+                        }
+                    }
+                }
+                AnimatedImage {
+                    id: loadingImage
+                    visible: JS.textToBool(loading_iamge_gif_visibility.text)
+                    source: "imagens/loadingBuffering.gif"
+                    anchors.fill: parent
+                }
+            }
+
+            Rectangle {
+                id: backwardButton
+                color: buttonRealeased
+                border.width: 0.5
+                border.color: "#6c6c6c"
+                width: parent.width / 3
                 anchors {
+                    top: imageContainer.bottom
                     bottom: parent.bottom
                     left: parent.left
                 }
                 Text {
-                    text: addDevice
+                    text: arrow
                     anchors.fill: parent
+                    rotation: 180
+                    color: textColor
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     fontSizeMode: Text.Fit
                     minimumPixelSize: 1
-                    wrapMode: Text.WrapAnywhere
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 }
 
                 MouseArea {
@@ -133,68 +236,189 @@ Item {
                     onPressed: parent.color = buttonPressed
                     onReleased: {
                         parent.color = buttonRealeased
-                        runScript.console_fill()
-                        ADB.a05_cadastrar_dispositivo()
-                        janela_cadastro.visible = false
-                        ADB.a04_carregar_dispositivos()
-                        ADB.ler_arquivos()
+                        imageSelection--
+                        if (imageSelection < 0)
+                            imageSelection = 0
+                        NET.jsonSpliter("", 1, imageSelection)
+                        //COLOCAR AKI OS SCRIPT PARA CARREGAR OS
+                        //DADOS DO APARELHO CONECTADO
                     }
                 }
             }
 
             Rectangle {
-                id: bottomSeparator
-                color: "#827f7f"
-                height: parent.height
-                border.width: 1
-                border.color: "white"
+                id: fwdButton
+                color: buttonRealeased
+                border.width: 0.5
+                border.color: "#6c6c6c"
+                width: parent.width / 3
                 anchors {
-                    bottom: parent.bottom
-                    left: cadastro_cadastrar.right
-                    right: cadastro_voltar.left
-                }
-            }
-
-            Rectangle {
-                id: cadastro_voltar
-                radius: 5
-                color: "grey"
-                width: (parent.width * 0.515) - (marginWidth)
-                height: buttonHeight
-                anchors {
+                    top: imageContainer.bottom
                     bottom: parent.bottom
                     right: parent.right
                 }
                 Text {
-                    text: previousPage
+                    text: arrow
                     anchors.fill: parent
+                    color: textColor
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     fontSizeMode: Text.Fit
                     minimumPixelSize: 1
-                    wrapMode: Text.WrapAnywhere
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 }
+
                 MouseArea {
                     anchors.fill: parent
                     onPressed: parent.color = buttonPressed
                     onReleased: {
-                        stackView.push(mainPage)
                         parent.color = buttonRealeased
-                        janela_cadastro.visible = false
-                        runScript.console_fill()
-                        ADB.ler_arquivos()
+                        imageSelection++
+                        if (imageSelection > maximumImageResults)
+                            imageSelection = maximumImageResults
+                        NET.jsonSpliter("", 1, imageSelection)
+                    }
+                }
+            }
+
+            Rectangle {
+                id: selectButton
+                color: buttonRealeased
+                border.width: 0.5
+                border.color: "#6c6c6c"
+                anchors {
+                    top: imageContainer.bottom
+                    bottom: parent.bottom
+                    left: backwardButton.right
+                    right: fwdButton.left
+                }
+                Text {
+                    text: selectionText
+                    anchors.fill: parent
+                    color: textColor
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: parent.color = buttonPressed
+                    onReleased: {
+                        parent.color = buttonRealeased
+                        remoteImageSelected=true
+                        //PASSA O LINK DA IMAGEM PARA O BANCO DE DADOS
+                        //OU SALVA A IMAGEM EM ALGUM LUGAR?
                     }
                 }
             }
         }
 
-        Button {
-            id: button
-            x: 424
-            y: 220
-            text: qsTr("UPDATE")
-            onClicked: {
-                NET.grabImage(nome.text)
+        Rectangle {
+            id: toolBox
+            color: textColor
+            border.width: 1
+            border.color: "white"
+            anchors {
+                top: registerDevice.bottom
+                bottom: parent.bottom
+                left: imageSelectionArea.right
+                right: parent.right
+                topMargin: marginHeight
+                bottomMargin: marginHeight
+                rightMargin: marginWidth
+                leftMargin: marginWidth
+            }
+
+            TextArea {
+                id: searchBox
+                text: searchHint
+                height: inputTextHeight*1.2
+                wrapMode: Text.WrapAnywhere
+                padding: 2
+                textFormat: Text.RichText
+                anchors {
+                    top: parent.top
+                    topMargin: marginHeight
+                    left: parent.left
+                    leftMargin: marginWidth
+                    right: parent.right
+                    rightMargin: marginWidth
+                }
+                onPressed: clear()
+            }
+
+            Rectangle {
+                id: searchButton
+                color: buttonRealeased
+                width: parent.width * 0.5
+                border.width: 0.5
+                border.color: "#6c6c6c"
+                anchors {
+                    top: searchBox.bottom
+                    bottom: parent.bottom
+                    left: parent.left
+                    topMargin: marginHeight * 2
+                }
+                Text {
+                    text: searchButtonText
+                    anchors.fill: parent
+                    color: textColor
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: parent.color = buttonPressed
+                    onReleased: {
+                        parent.color = buttonRealeased
+                        loading_iamge_gif_visibility.text = "true"
+                        NET.grabImage(searchBox.getText(0, 50))
+                        //PASSA O LINK DA IMAGEM PARA O BANCO DE DADOS
+                        //OU SALVA A IMAGEM EM ALGUM LUGAR?
+                    }
+                }
+            }
+
+            Rectangle {
+                id: backButton
+                color: buttonRealeased
+                width: parent.width * 0.5
+                border.width: 0.5
+                border.color: "#6c6c6c"
+                anchors {
+                    top: searchBox.bottom
+                    bottom: parent.bottom
+                    right: parent.right
+                    topMargin: marginHeight * 2
+                }
+                Text {
+                    text: backButtonText
+                    anchors.fill: parent
+                    color: textColor
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 1
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: parent.color = buttonPressed
+                    onReleased: {
+                        parent.color = buttonRealeased
+                        stackView.push(mainPage)
+                        //PASSA O LINK DA IMAGEM PARA O BANCO DE DADOS
+                        //OU SALVA A IMAGEM EM ALGUM LUGAR?
+                    }
+                }
             }
         }
     }
@@ -203,53 +427,15 @@ Item {
         id: stackDebug
         x: posX
         y: posY
-        //        x: parent.x
-        //        y: parent.y
         width: debugWindowWidth
         height: debugWindowHeight
-        clip: false
-        rotation: 0
         initialItem: debugFloatingWindow
         onXChanged: posX = stackDebug.x
         onYChanged: posY = stackDebug.y
-    }
-
-    Button {
-        id: selectButton
-        x: 110
-        y: 392
-        text: qsTr("SELECT")
-    }
-
-    Button {
-        id: backwardButton
-        x: 8
-        y: 392
-        text: qsTr("<")
-        onClicked: {
-            imageSelection--
-            if (imageSelection < 0)imageSelection = 0
-            NET.jsonSpliter("",1,imageSelection)
-        }
-    }
-
-    Button {
-        id: fwdButton
-        x: 212
-        y: 392
-        text: qsTr(">")
-        onClicked: {
-            imageSelection++
-            if (imageSelection > 3)imageSelection = 3
-            NET.jsonSpliter("",1,imageSelection)
-        }
     }
 
     Component {
         id: debugFloatingWindow
         Debug {}
     }
-
-
-
 }
