@@ -37,12 +37,12 @@ function loadDevices(){
             image_path=comandosql.rows.item(i).image_path
             desc=comandosql.rows.item(i).desc
             devicesGrid.model.append({
-                                          grid_indice:indice,
-                                          grid_nome:nome,
-                                          grid_ip:ip,
-                                          grid_image_path:image_path,
-                                          grid_desc:desc
-                                      })
+                                         grid_indice:indice,
+                                         grid_nome:nome,
+                                         grid_ip:ip,
+                                         grid_image_path:image_path,
+                                         grid_desc:desc
+                                     })
         }
     })
 }
@@ -67,4 +67,19 @@ function windowHandler(indice){
         }
     })
     return parseInt(retorno)
+}
+
+function registerDevice(){
+    console.debug(grabResultImage.source+" - "+remoteImageSelected)
+    var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
+    db.transaction(function(tx){
+        var indice = (tx.executeSql('SELECT * FROM dispositivos')).rows.length
+        if(!remoteImageSelected)
+            image_path="file:///"+image_path
+            tx.executeSql('INSERT INTO dispositivos VALUES(?,?,?,?,?)'
+                          ,[(indice+1),nome.text,ip.text,image_path.text,descricao.text])
+        if(remoteImageSelected)
+            tx.executeSql('INSERT INTO dispositivos VALUES(?,?,?,?,?)'
+                          ,[(indice+1),nome.text,ip.text,grabResultImage.source,descricao.text])
+    })
 }
