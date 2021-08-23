@@ -757,16 +757,17 @@ qrc_qml.cpp: qml.qrc \
 		adbCommands.js \
 		MainPage.qml \
 		htmlGrab.js \
-		main_old.qml \
 		mainLogic.js \
 		SettingsPage.qml \
 		Debug.qml \
 		main.qml \
 		scripts/adb_wifi_config.sh \
 		scripts/conectar.sh \
-		scripts/desconectar.sh \
+		scripts/kill-server.sh \
 		scripts/data_import.sh \
-		imagens/loading-buffering.gif \
+		scripts/adb_wifi_disconnect.sh \
+		imagens/searchBackground.jpeg \
+		imagens/loadingBuffering.gif \
 		querys/query3.json \
 		querys/query2.json \
 		querys/query1.json \

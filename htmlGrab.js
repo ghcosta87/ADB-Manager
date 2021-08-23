@@ -4,8 +4,9 @@ function grabImage(device) {
     var xhr = new XMLHttpRequest();
 
     let newSearchString=device.replace(" ","+")
-    console.log(newSearchString)
-    var bingImageSearch="https://bing-image-search1.p.rapidapi.com/images/search?q="+newSearchString+"&count=4"
+    console.log("text to search: "+newSearchString)
+    var bingImageSearch="https://bing-image-search1.p.rapidapi.com/images/search?q="+newSearchString+"&count="+maximumImageResults
+
     var texto_html; var textFilter
 
     xhr.withCredentials = true;
@@ -20,35 +21,28 @@ function grabImage(device) {
             texto_html =xhr.responseText
             textFilter=texto_html.replace(/[\\]/g, '')
             runScript.debugNetGraber(textFilter)
-            jsonSpliter(textFilter,0,0)
-            console.log("ORIGINAL GET DONE !")
+            jsonSpliter(textFilter,0,0)     
+            loading_iamge_gif_visibility.text="false"
         }
     }
     xhr.send(data)
 }
 
 function jsonSpliter(myJson,request,picture){
-    console.log(myValueObjects)
-    console.log(picture)
-
     switch(request){
     case 0:
-        var myObject=JSON.parse(myJson)
-        const myValueJson=JSON.stringify(myObject.value)
-        myValueObjects=JSON.parse(myValueJson)
+        try{
+            var myObject=JSON.parse(myJson)
+            const myValueJson=JSON.stringify(myObject.value)
+            myValueObjects=JSON.parse(myValueJson)
+            grabResultImage.source=myValueObjects[0].contentUrl
+            console.log(grabResultImage.source)
+        }catch(e){
+            searchBox.text="Nada encontrado ... Tente novamente"
+        }
         break;
     case 1:
         grabResultImage.source=myValueObjects[picture].contentUrl
+        console.log(grabResultImage.source)
     }
-
-
-
-
-    //    contentUrl
-
-    //    for(let i=0;i<myValueObjects.length;i++){
-    //        console.log(myValueObjects[i])
-    //    }
-
-    //    return null
 }

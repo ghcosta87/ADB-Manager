@@ -1,48 +1,5 @@
 
-function a03_setar_constantes(){
-    var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
-    db.transaction(function(tx){
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.width,"window_width"]);
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.height,"window_height"]);
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.x,"window_x"]);
-        tx.executeSql('UPDATE dados_do_programa SET valor=? WHERE nome=?',[appWindow.y,"window_y"]);
-    })
 
-//    janela_principal.title="Android Debug Bridge - Manager"
-}
-
-function a04_carregar_dispositivos(){
-    var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
-    devicesGrid.model.clear()
-    var i
-    var indice; var nome; var ip; var image_path; var desc
-    db.transaction(function(tx){
-        var comandosql=tx.executeSql('SELECT * FROM  dispositivos')
-        for(i=0;i<comandosql.rows.length;i++){
-            indice=comandosql.rows.item(i).indice
-            nome=comandosql.rows.item(i).nome
-            ip=comandosql.rows.item(i).ip
-            image_path=comandosql.rows.item(i).image_path
-            desc=comandosql.rows.item(i).desc
-            devicesGrid.model.append({
-                                          grid_indice:indice,
-                                          grid_nome:nome,
-                                          grid_ip:ip,
-                                          grid_image_path:image_path,
-                                          grid_desc:desc
-                                      })
-        }
-    })
-}
-
-function a05_cadastrar_dispositivo(selecao){
-    var db=LocalStorage.openDatabaseSync(dbId,dbVersion,dbDescription,dbsize)
-    db.transaction(function(tx){
-        var indice = (tx.executeSql('SELECT * FROM dispositivos')).rows.length
-        tx.executeSql('INSERT INTO dispositivos VALUES(?,?,?,?,?)'
-                      ,[(indice+1),nome.text,ip.text,image_path.text,descricao.text])
-    })
-}
 
 function a06_ler_arquivos(selecao){
     var myPath=runScript.grabPath()
@@ -63,13 +20,17 @@ function a06_ler_arquivos(selecao){
         doc.open("GET","file://"+myPath+"/conexao.txt",true)
         break
     }
-    console_area.text = "";
+    console_area_text.text = "";
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
         } else if (doc.readyState === XMLHttpRequest.DONE) {
             var linha =2
             var a = doc.response
             var b =a.trim()
+            console.log(b)
+            loading_gif_visibility.text="false"
+            loading_text_visibility.text="false"
+            loading_text_context.text="DONE !"
             switch(selecao){
             case "ip":
                 showRequestInfo("IP: "+b)
@@ -91,18 +52,18 @@ function a06_ler_arquivos(selecao){
 
 function showRequestInfo(input) {
     //    console.debug(input)
-    if(input!=="#text")console_area.text = console_area.text + "\n" + input
+    if(input!=="#text")console_area_text.text = console_area_text.text + "\n" + input
 }
 
 function set_console_title(input){
     if(input!=="#text"){
         var retorno = parseInt(input)
-        if(retorno===0)console_title.text= "## - SEM CONEXÃO - ##"
-        if(retorno===1)console_title.text= "- DISPOSITIVO CONECTADO -"
+        if(retorno===0)console_title_text.text= "## - SEM CONEXÃO - ##"
+        if(retorno===1)console_title_text.text= "- DISPOSITIVO CONECTADO -"
     }
 }
 
-function ler_arquivos(){
+function load_content(){
     a06_ler_arquivos("ip")
     a06_ler_arquivos("endereco")
     a06_ler_arquivos("modelo")
