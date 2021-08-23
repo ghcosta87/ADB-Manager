@@ -23,7 +23,7 @@ ApplicationWindow {
     title: applicationTitle + version
 
     //  VERSION
-    property string version: " v1.0.4.3"
+    property string version: " v1.0.5.4"
 
     //  DATABASE
     property string dbId: 'MyData'
