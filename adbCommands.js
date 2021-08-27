@@ -27,7 +27,6 @@ function a06_ler_arquivos(selecao){
             var linha =2
             var a = doc.response
             var b =a.trim()
-            console.log(b)
             loading_gif_visibility.text="false"
             loading_text_visibility.text="false"
             loading_text_context.text="DONE !"
@@ -51,7 +50,6 @@ function a06_ler_arquivos(selecao){
 }
 
 function showRequestInfo(input) {
-    //    console.debug(input)
     if(input!=="#text")console_area_text.text = console_area_text.text + "\n" + input
 }
 

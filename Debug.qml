@@ -57,7 +57,7 @@ Item {
                 //  position change : no color changes
                 onPositionChanged:{
                     var newPosition
-                    if(!lockPosition){
+                    if(!lockPosition){                       
                         switch(currentPage){
                         case 0:
                             newPosition=mapToItem(mainItem,mouse.x-debug.width+150,mouse.y-debug.height+15)

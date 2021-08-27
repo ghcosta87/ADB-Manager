@@ -23,6 +23,13 @@ Item {
         }
     }
 
+function butonConfirmation(){
+//registerDevice
+}
+Timer{
+}
+//adicionar aviso de cadastro efetuado
+
     Rectangle {
         id: janela_cadastro
         color: myBackground
@@ -141,6 +148,7 @@ Item {
                 rightMargin: marginWidth
             }
             Text {
+                id:registerDeviceText
                 text: addDevice
                 anchors.fill: parent
                 color: textColor
@@ -156,6 +164,7 @@ Item {
                 onPressed: parent.color = buttonPressed
                 onReleased: {
                     parent.color = buttonRealeased
+                    butonConfirmation()
                     SQL.registerDevice()
                     //COLOCAR AKI OS SCRIPT PARA CARREGAR OS
                     //DADOS DO APARELHO CONECTADO

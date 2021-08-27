@@ -21,6 +21,7 @@ Item {
         SQL.loadDevices()
         timer.start()
         currentPage = 0
+        gridSelectedItem=devicesGrid.currentIndex
         if (!mainPageFirstTime) {
             mainPageFirstTime = true
             posY = appWindow.height -(appWindow.height * 0.6)
@@ -43,8 +44,17 @@ Item {
                 } else {
                     timer.start()
                 }
+                if(JS.textToBool(grid_updater_timer.text)){
+                    devicesGrid.model.remove(devicesGrid.currentIndex, 1)
+                    if (devicesGrid.count == 0)
+                        devicesGrid.currentIndex = -1
+                    SQL.loadDevices()
+                    grid_updater_timer.text="false"
+                }
             }
         }
+
+
         Timer {
             id: interval
             interval: 1500
@@ -182,7 +192,6 @@ Item {
                         }
                     }
 
-
                     Text {
                         anchors {
                             top: grid_title.bottom
@@ -209,6 +218,11 @@ Item {
                         anchors.fill: parent
                         onClicked: {
                             devicesGrid.currentIndex = index
+                            gridSelectedItem=index
+                            debug_field_2.text=index
+                            debug_field_3.text=JS.textToBool(grid_updater_timer.text)
+                            debug_field_4.text="rowMaxID: "+devicesRowId
+                            debug_field_6
                         }
                     }
                 }
@@ -301,7 +315,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: "white"
-                    fontSizeMode: Text.Fill
+                    //fontSizeMode: Text.Fill
                     minimumPixelSize: 1
                 }
             }
@@ -309,7 +323,7 @@ Item {
             Text {
                 id: console_area
                 lineHeight: 0.9
-                fontSizeMode: Text.Fill
+                //fontSizeMode: Text.Fill
                 color: "white"
                 text: console_area_text.text
                 minimumPixelSize: 1

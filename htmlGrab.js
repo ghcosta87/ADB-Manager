@@ -4,7 +4,6 @@ function grabImage(device) {
     var xhr = new XMLHttpRequest();
 
     let newSearchString=device.replace(" ","+")
-    console.log("text to search: "+newSearchString)
     var bingImageSearch="https://bing-image-search1.p.rapidapi.com/images/search?q="+newSearchString+"&count="+maximumImageResults
 
     var texto_html; var textFilter
@@ -36,13 +35,11 @@ function jsonSpliter(myJson,request,picture){
             const myValueJson=JSON.stringify(myObject.value)
             myValueObjects=JSON.parse(myValueJson)
             grabResultImage.source=myValueObjects[0].contentUrl
-            console.log(grabResultImage.source)
         }catch(e){
             searchBox.text="Nada encontrado ... Tente novamente"
         }
         break;
     case 1:
         grabResultImage.source=myValueObjects[picture].contentUrl
-        console.log(grabResultImage.source)
     }
 }

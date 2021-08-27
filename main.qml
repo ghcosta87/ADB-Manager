@@ -30,6 +30,8 @@ ApplicationWindow {
     property string dbVersion: '2.0'
     property string dbDescription: 'Database application'
     property int dbsize: 1000000
+    property int devicesRowId
+    //ACHO Q PODE APAGAR DEPOIS
     property var db
 
     //  COLORS
@@ -67,8 +69,6 @@ ApplicationWindow {
 
     property int inputTextHeight: appWindow.height * 0.08
 
-
-
     //  STRINGS
     property string connectDevice: "CONNECT"
     property string removeDevice: "DISCONNECT"
@@ -91,14 +91,24 @@ ApplicationWindow {
     property bool settingsPAgeFirstTime
     property bool debugStarted
     property bool remoteImageSelected
-    property var currentPage
+    property int currentPage
     property var imageSelection
 
     property int maximumImageResults: 10
 
+    property int nextId
+    property int gridSelectedItem
+
     //  POSTITION VARIABLES
     property int posX
     property int posY
+
+    //JAVA PROPERTIES
+    property int id_device_quantity: 0
+    property int id_select_all: 1
+    property int id_delete_item: 2
+    property string select_all: 'SELEC * FROM dispositivos'
+    property string delete_item: 'DELETE FROM dispositivos WHERE rowid=?'
 
     //  ACTIONS
     function mainActions(actionSelected) {
@@ -178,9 +188,13 @@ ApplicationWindow {
         Text {
             id: loading_iamge_gif_visibility
         }
+        property alias grid_updater_timer: grid_updater_timer
+        Text {
+            id: grid_updater_timer
+        }
     }
 
-    Timer{
+    Timer {
         id: killDelay
         interval: 1000
         repeat: false
@@ -321,14 +335,16 @@ ApplicationWindow {
                     MenuItem {
                         text: "Import Database"
                         onClicked: {
+
                         }
                     }
                     MenuItem {
                         text: "Export Database"
                         onClicked: {
+
                         }
                     }
-                    MenuSeparator{
+                    MenuSeparator {
                         padding: 0
                         topPadding: 12
                         bottomPadding: 12
@@ -347,222 +363,230 @@ ApplicationWindow {
                     MenuItem {
                         text: "Remove device"
                         onClicked: {
-                            mainActions(close_window)
+                            //SQL.removeSelectedDevice(devicesGrid.model.get(listView.currentIndex).id)
+                            //                            if(SQL.removeSelectedDevice(selectedDevice))grid_updater_timer.text="true"
+
+                            if(SQL.removeSelectedDevice(gridSelectedItem))grid_updater_timer.text="true"
+//                            gridView.model.remove(gridView.currentIndex, 1)
+//                            listView.model.remove(listView.currentIndex, 1)
                         }
                     }
-                    MenuSeparator{
-                        padding: 0
-                        topPadding: 12
-                        bottomPadding: 12
-                        contentItem: Rectangle {
-                            implicitWidth: 200
-                            implicitHeight: 1
-                            color: "#1E000000"
+                        MenuSeparator {
+                            padding: 0
+                            topPadding: 12
+                            bottomPadding: 12
+                            contentItem: Rectangle {
+                                implicitWidth: 200
+                                implicitHeight: 1
+                                color: "#1E000000"
+                            }
+                        }
+                        MenuItem {
+                            text: "Exit"
+                            onClicked: {
+
+                            }
                         }
                     }
-                    MenuItem {
-                        text: "Exit"
-                        onClicked: {
+                }
+            }
+
+            Rectangle {
+                id: subMenuDevice
+                color: "#00000000"
+                border.width: 1
+                width: menuWidth
+                height: globalMenuContainer.height
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: subMenuFile.right
+                }
+                Text {
+                    anchors.fill: parent
+                    anchors.leftMargin: 5
+                    horizontalAlignment: Qt.AlignLeft
+                    verticalAlignment: Qt.AlignVCenter
+                    text: "<u>D</u>ispositivos"
+                    textFormat: Text.RichText
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        contextDevice.open()
+                    }
+                    Menu {
+                        id: contextDevice
+                        y: (parent.height)
+                        enter: Transition {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    property: "height"
+                                    from: 0
+                                    to: contextFile.implicitHeight
+                                    duration: 100
+                                }
+                                NumberAnimation {
+                                    property: "width"
+                                    from: 0
+                                    to: contextFile.implicitWidth
+                                    duration: 100
+                                }
+                            }
+                        }
+                        exit: Transition {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    property: "height"
+                                    from: contextFile.implicitHeight
+                                    to: 0
+                                    duration: 100
+                                }
+                                NumberAnimation {
+                                    property: "width"
+                                    from: contextFile.implicitWidth
+                                    to: 0
+                                    duration: 100
+                                }
+                            }
+                        }
+
+                        MenuItem {
+                            text: "Search for connection"
+                            onClicked: {
+                                runScript.console_fill()
+                                loading_gif_visibility.text = "true"
+                                loading_text_visibility.text = "true"
+                                loading_text_context.text = "Loading ..."
+                                loading_timer_control.text = "true"
+                            }
+                        }
+                        MenuItem {
+                            text: "Add new device"
+                            onClicked: {
+                                stackView.push(settingsPage)
+                            }
+                        }
+                        MenuItem {
+                            text: "Remove device"
+                            onClicked: {
+
+                            }
+                        }
+                        MenuSeparator {
+                            padding: 0
+                            topPadding: 12
+                            bottomPadding: 12
+                            contentItem: Rectangle {
+                                implicitWidth: 200
+                                implicitHeight: 1
+                                color: "#1E000000"
+                            }
+                        }
+                        MenuItem {
+                            text: "Set Wi-fi connection"
+                            onClicked: {
+                                runScript.setWifiConnection()
+                            }
+                        }
+                        MenuItem {
+                            text: "Disconnect Wi-fi connection"
+                            onClicked: {
+                                runScript.desconectar_dispositivos()
+                            }
+                        }
+                        MenuItem {
+                            text: "Kill server"
+                            onClicked: {
+                                runScript.desconectar_dispositivos()
+                                killDelay.start()
+                            }
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                id: subMenuHelp
+                color: "#00000000"
+                border.width: 1
+                width: menuWidth
+                height: globalMenuContainer.height
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: subMenuDevice.right
+                }
+                Text {
+                    anchors.fill: parent
+                    anchors.leftMargin: 5
+                    horizontalAlignment: Qt.AlignLeft
+                    verticalAlignment: Qt.AlignVCenter
+                    text: "<u>A</u>juda"
+                    textFormat: Text.RichText
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        contextHelp.open()
+                    }
+
+                    Menu {
+                        id: contextHelp
+                        y: (parent.height)
+                        enter: Transition {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    property: "height"
+                                    from: 0
+                                    to: contextFile.implicitHeight
+                                    duration: 100
+                                }
+                                NumberAnimation {
+                                    property: "width"
+                                    from: 0
+                                    to: contextFile.implicitWidth
+                                    duration: 100
+                                }
+                            }
+                        }
+                        exit: Transition {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    property: "height"
+                                    from: contextFile.implicitHeight
+                                    to: 0
+                                    duration: 100
+                                }
+                                NumberAnimation {
+                                    property: "width"
+                                    from: contextFile.implicitWidth
+                                    to: 0
+                                    duration: 100
+                                }
+                            }
+                        }
+
+                        MenuItem {
+                            text: "Manual"
+                            onClicked: {
+
+                            }
+                        }
+                        MenuItem {
+                            text: "Contact"
+                            onClicked: {
+
+                            }
+                        }
+                        MenuItem {
+                            text: "About"
+                            onClicked: {
+
+                            }
                         }
                     }
                 }
             }
         }
-
-        Rectangle {
-            id: subMenuDevice
-            color: "#00000000"
-            border.width: 1
-            width: menuWidth
-            height: globalMenuContainer.height
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: subMenuFile.right
-            }
-            Text {
-                anchors.fill: parent
-                anchors.leftMargin: 5
-                horizontalAlignment: Qt.AlignLeft
-                verticalAlignment: Qt.AlignVCenter
-                text: "<u>D</u>ispositivos"
-                textFormat: Text.RichText
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    contextDevice.open()
-                }
-                Menu {
-                    id: contextDevice
-                    y: (parent.height)
-                    enter: Transition {
-                        ParallelAnimation {
-                            NumberAnimation {
-                                property: "height"
-                                from: 0
-                                to: contextFile.implicitHeight
-                                duration: 100
-                            }
-                            NumberAnimation {
-                                property: "width"
-                                from: 0
-                                to: contextFile.implicitWidth
-                                duration: 100
-                            }
-                        }
-                    }
-                    exit: Transition {
-                        ParallelAnimation {
-                            NumberAnimation {
-                                property: "height"
-                                from: contextFile.implicitHeight
-                                to: 0
-                                duration: 100
-                            }
-                            NumberAnimation {
-                                property: "width"
-                                from: contextFile.implicitWidth
-                                to: 0
-                                duration: 100
-                            }
-                        }
-                    }
-
-                    MenuItem {
-                        text: "Search for connection"
-                        onClicked: {
-                            runScript.console_fill()
-                            loading_gif_visibility.text = "true"
-                            loading_text_visibility.text = "true"
-                            loading_text_context.text = "Loading ..."
-                            loading_timer_control.text = "true"
-                        }
-                    }
-                    MenuItem {
-                        text: "Add new device"
-                        onClicked: {
-                            stackView.push(settingsPage)
-                        }
-                    }
-                    MenuItem {
-                        text: "Remove device"
-                        onClicked: {
-                        }
-                    }
-                    MenuSeparator{
-                        padding: 0
-                        topPadding: 12
-                        bottomPadding: 12
-                        contentItem: Rectangle {
-                            implicitWidth: 200
-                            implicitHeight: 1
-                            color: "#1E000000"
-                        }
-                    }
-                    MenuItem {
-                        text: "Set Wi-fi connection"
-                        onClicked: {
-                            runScript.setWifiConnection()
-                        }
-                    }
-                    MenuItem {
-                        text: "Disconnect Wi-fi connection"
-                        onClicked: {
-                            runScript.desconectar_dispositivos()
-                        }
-                    }
-                    MenuItem {
-                        text: "Kill server"
-                        onClicked: {
-                            runScript.desconectar_dispositivos()
-                            killDelay.start()
-                        }
-                    }
-                }
-            }
-        }
-
-        Rectangle {
-            id: subMenuHelp
-            color: "#00000000"
-            border.width: 1
-            width: menuWidth
-            height: globalMenuContainer.height
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: subMenuDevice.right
-            }
-            Text {
-                anchors.fill: parent
-                anchors.leftMargin: 5
-                horizontalAlignment: Qt.AlignLeft
-                verticalAlignment: Qt.AlignVCenter
-                text: "<u>A</u>juda"
-                textFormat: Text.RichText
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    contextHelp.open()
-                }
-                Menu {
-                    id: contextHelp
-                    y: (parent.height)
-                    enter: Transition {
-                        ParallelAnimation {
-                            NumberAnimation {
-                                property: "height"
-                                from: 0
-                                to: contextFile.implicitHeight
-                                duration: 100
-                            }
-                            NumberAnimation {
-                                property: "width"
-                                from: 0
-                                to: contextFile.implicitWidth
-                                duration: 100
-                            }
-                        }
-                    }
-                    exit: Transition {
-                        ParallelAnimation {
-                            NumberAnimation {
-                                property: "height"
-                                from: contextFile.implicitHeight
-                                to: 0
-                                duration: 100
-                            }
-                            NumberAnimation {
-                                property: "width"
-                                from: contextFile.implicitWidth
-                                to: 0
-                                duration: 100
-                            }
-                        }
-                    }
-
-                    MenuItem {
-                        text: "Manual"
-                        onClicked: {
-
-                        }
-                    }
-                    MenuItem {
-                        text: "Contact"
-                        onClicked: {
-
-                        }
-                    }
-                    MenuItem {
-                        text: "About"
-                        onClicked: {
-
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
