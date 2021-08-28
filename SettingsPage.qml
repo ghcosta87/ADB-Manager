@@ -18,7 +18,6 @@ Item {
         currentPage = 1
         if (!settingsPAgeFirstTime) {
             settingsPAgeFirstTime = true
-            posY = appWindow.height * 0.6
             imageSelection = 0
         }
     }
@@ -432,19 +431,19 @@ Timer{
         }
     }
 
-    StackView {
-        id: stackDebug
-        x: posX
-        y: posY
-        width: debugWindowWidth
-        height: debugWindowHeight
-        initialItem: debugFloatingWindow
-        onXChanged: posX = stackDebug.x
-        onYChanged: posY = stackDebug.y
-    }
+//    StackView {
+//        id: stackDebug
+//        x: posX
+//        y: posY
+//        width: debugWindowWidth
+//        height: debugWindowHeight
+//        initialItem: debugFloatingWindow
+//        onXChanged: posX = stackDebug.x
+//        onYChanged: posY = stackDebug.y
+//    }
 
-    Component {
-        id: debugFloatingWindow
-        Debug {}
-    }
+//    Component {
+//        id: debugFloatingWindow
+//        Debug {}
+//    }
 }
