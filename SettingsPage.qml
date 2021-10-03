@@ -18,10 +18,16 @@ Item {
         currentPage = 1
         if (!settingsPAgeFirstTime) {
             settingsPAgeFirstTime = true
-            posY = appWindow.height * 0.6
             imageSelection = 0
         }
     }
+
+function butonConfirmation(){
+//registerDevice
+}
+Timer{
+}
+//adicionar aviso de cadastro efetuado
 
     Rectangle {
         id: janela_cadastro
@@ -141,6 +147,7 @@ Item {
                 rightMargin: marginWidth
             }
             Text {
+                id:registerDeviceText
                 text: addDevice
                 anchors.fill: parent
                 color: textColor
@@ -156,6 +163,7 @@ Item {
                 onPressed: parent.color = buttonPressed
                 onReleased: {
                     parent.color = buttonRealeased
+                    butonConfirmation()
                     SQL.registerDevice()
                     //COLOCAR AKI OS SCRIPT PARA CARREGAR OS
                     //DADOS DO APARELHO CONECTADO
@@ -423,19 +431,19 @@ Item {
         }
     }
 
-    StackView {
-        id: stackDebug
-        x: posX
-        y: posY
-        width: debugWindowWidth
-        height: debugWindowHeight
-        initialItem: debugFloatingWindow
-        onXChanged: posX = stackDebug.x
-        onYChanged: posY = stackDebug.y
-    }
+//    StackView {
+//        id: stackDebug
+//        x: posX
+//        y: posY
+//        width: debugWindowWidth
+//        height: debugWindowHeight
+//        initialItem: debugFloatingWindow
+//        onXChanged: posX = stackDebug.x
+//        onYChanged: posY = stackDebug.y
+//    }
 
-    Component {
-        id: debugFloatingWindow
-        Debug {}
-    }
+//    Component {
+//        id: debugFloatingWindow
+//        Debug {}
+//    }
 }

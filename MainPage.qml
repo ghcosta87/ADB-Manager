@@ -21,10 +21,11 @@ Item {
         SQL.loadDevices()
         timer.start()
         currentPage = 0
+        gridSelectedItem=devicesGrid.currentIndex
         if (!mainPageFirstTime) {
             mainPageFirstTime = true
-            posY = appWindow.height -(appWindow.height * 0.6)
-            posX = appWindow.width-(appWindow.width * 0.5)
+//            posY = appWindow.height -(appWindow.height * 0.6)
+//            posX = appWindow.width-(appWindow.width * 0.5)
             click = !click
             console_title_text.text = "## - AGUARDANDO CONEXÃO - ##"
         }
@@ -34,7 +35,7 @@ Item {
         visible: false
         Timer {
             id: timer
-            interval: 100
+            interval: 50
             repeat: true
             onTriggered: {
                 if (JS.textToBool(loading_timer_control.text)) {
@@ -43,8 +44,17 @@ Item {
                 } else {
                     timer.start()
                 }
+                if(JS.textToBool(grid_updater_timer.text)){
+                    devicesGrid.model.remove(devicesGrid.currentIndex, 1)
+                    if (devicesGrid.count == 0)
+                        devicesGrid.currentIndex = -1
+                    SQL.loadDevices()
+                    grid_updater_timer.text="false"
+                }
             }
         }
+
+
         Timer {
             id: interval
             interval: 1500
@@ -89,7 +99,7 @@ Item {
             highlightFollowsCurrentItem: false
             focus: true
             model: ListModel {}
-            height: parent.height *0.6
+            height: parent.height *0.45
             anchors {
                 top: parent.top
                 topMargin: marginHeight+globalMenu.height
@@ -182,7 +192,6 @@ Item {
                         }
                     }
 
-
                     Text {
                         anchors {
                             top: grid_title.bottom
@@ -201,7 +210,6 @@ Item {
                         minimumPixelSize: 1
                         text: "<p><i>" + grid_ip + "</p></i>"
                               + "<p><i>" + grid_desc + "</p></i>"
-                        //                              + "<p><i>Imagem: " + grid_image_path + "</p></i>"
                     }
 
                     MouseArea {
@@ -209,6 +217,7 @@ Item {
                         anchors.fill: parent
                         onClicked: {
                             devicesGrid.currentIndex = index
+                            gridSelectedItem=index                   
                         }
                     }
                 }
@@ -233,11 +242,11 @@ Item {
 
             Rectangle {
                 id: loadingArea
-                color: '#00000000'
+                color: noColor
                 width: 70
                 anchors {
                     top: parent.top
-                    bottom: parent.bottom
+                    bottom: containerLogTerminal.top
                     right: parent.right
                     topMargin: titleBar.height + marginHeight
                     rightMargin: marginWidth
@@ -301,7 +310,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: "white"
-                    fontSizeMode: Text.Fill
+                    //fontSizeMode: Text.Fill
                     minimumPixelSize: 1
                 }
             }
@@ -309,7 +318,7 @@ Item {
             Text {
                 id: console_area
                 lineHeight: 0.9
-                fontSizeMode: Text.Fill
+                //fontSizeMode: Text.Fill
                 color: "white"
                 text: console_area_text.text
                 minimumPixelSize: 1
@@ -323,24 +332,22 @@ Item {
                     right: parent.right
                 }
             }
+
+
+            Rectangle{
+                id:containerLogTerminal
+                height: parent.height*0.45
+                color: noColor
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    topMargin: marginHeight
+                }
+                LogTerminal{
+                }
+            }
         }
 
-        StackView {
-            id: stackDebug
-            x: posX
-            y: posY
-            onXChanged: posX = stackDebug.x
-            onYChanged: posY = stackDebug.y
-            width: debugWindowWidth
-            height: debugWindowHeight
-            clip: false
-            rotation: 0
-            initialItem: debugFloatingWindow
-        }
-
-        Component {
-            id: debugFloatingWindow
-            Debug {}
-        }
     }
 }

@@ -14,7 +14,6 @@
         <file>main.qml</file>
         <file>MainPage.qml</file>
         <file>SettingsPage.qml</file>
-        <file>Debug.qml</file>
         <file>htmlGrab.js</file>
         <file>querys/originalGET.json</file>
         <file>querys/query1.json</file>
@@ -23,5 +22,8 @@
         <file>querys/query4.json</file>
         <file>imagens/searchBackground.jpeg</file>
         <file>scripts/adb_wifi_disconnect.sh</file>
+        <file>LogTerminal.qml</file>
+        <file>About.qml</file>
+        <file>imagens/github-original-wordmark.svg</file>
     </qresource>
 </RCC>
